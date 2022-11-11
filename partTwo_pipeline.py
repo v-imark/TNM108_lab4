@@ -26,9 +26,9 @@ text_clf = Pipeline([
 text_clf.fit(docs_train, y_train)
 
 parameters = {
- 'vect__ngram_range': [(1, 3), (1, 2)],
+ 'vect__ngram_range': [(1, 1), (1, 2)],
  'tfidf__use_idf': (True, False),
- 'clf__alpha': (1e-2, 0.1),
+ 'clf__alpha': (1e-1, 1e-2),
 }
 
 gs_clf = GridSearchCV(text_clf, parameters, cv=5, n_jobs=-1)
@@ -57,13 +57,25 @@ print('Confusion matrix:', cm)
 # very short and fake movie reviews
 reviews_new = ['This movie was excellent', 'Absolute joy ride',
                'Steven Seagal was terrible', 'Steven Seagal shone through.',
-               'This was certainly a movie', 'Two thumbs up', 'I fell asleep halfway through',
-               "We can't wait for the sequel!!", '!', '?', 'I cannot recommend this highly enough',
-               'instant classic.', 'Steven Seagal was amazing. His performance was Oscar-worthy.']
-
+               'This was certainly a good movie', 'Two thumbs up', 'I fell asleep halfway through',
+               "We can't wait for the sequel!!!", '!', '?', 'I cannot recommend this highly enough',
+               'instant classic.', 'Meryl Streep was amazing. His performance was Oscar-worthy.',
+               'I am speechless', 'Steven Seagal', 'Meryl Streep', 'James Corden', 'Arnold Schwarzenegger',
+               'Nicolas Cage', 'Sylvester Stallone', 'Sharknado was amazing',
+               ]
+thebatmanreview = ["""Everything about this movie is trying too hard - the over dramatic score, the long shots on 
+characters faces, the overacting, the complex crime story - it all feels like it's trying to get an Oscar in every 
+moment. It's overly long, drawn out, and the story feels like a generic crime saga that has the Batman universe 
+shoehorned into it. This movie is not a masterpiece, but it spends a lot of effort making you think it is!"""]
 
 # have classifier make a prediction
 pred = gs_clf.predict(reviews_new)
 # print out results
 for review, category in zip(reviews_new, pred):
+    print('%r => %s' % (review, movie.target_names[category]))
+
+# have classifier make a prediction
+pred = gs_clf.predict(thebatmanreview)
+# print out results
+for review, category in zip(thebatmanreview, pred):
     print('%r => %s' % (review, movie.target_names[category]))
